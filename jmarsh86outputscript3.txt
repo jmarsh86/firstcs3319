@@ -1,0 +1,133 @@
+Warning: Using a password on the command line interface can be insecure.
+--------------
+SELECT description FROM product
+--------------
+
+description
+Bike
+Socks
+Hockey stick
+Elbow pads
+Knee Pads
+Roller Blades
+Helmet
+--------------
+SELECT DISTINCT cityname FROM customer
+--------------
+
+cityname
+Boston
+Springfield
+Kypto
+Providence
+--------------
+SELECT * FROM agent ORDER BY cityname
+--------------
+
+id	firstname	lastname	cityname	commission
+33	David	Letterman	Bedrock	100
+11	Regis	Philbin	Boston	33
+13	Justin	Marshall	Cayuga	75
+22	Courtney	Cox	New York	25
+12	Rosie	Cox	Ottawa	50
+66	Rosie	ODonnell	Ottawa	100
+99	Hugh	Grant	Springfield	16
+--------------
+SELECT firstname,lastname FROM customer WHERE cityname='Springfield'
+--------------
+
+firstname	lastname
+Monty	Burns
+Homer	Simpson
+Sideshow	Bob
+--------------
+SELECT lastname FROM customer WHERE agentid='11'
+--------------
+
+lastname
+Rubble
+Flintstone
+--------------
+SELECT * FROM product WHERE description LIKE '%pad%' OR '%Pad%'
+--------------
+
+id	description	cost	inventory
+66	Elbow pads	14.25	120
+78	Knee Pads	12.15	70
+--------------
+SELECT lastname,description,quantity FROM customer INNER JOIN purchased ON customer.id=purchased.customerid INNER JOIN product ON purchased.productid=product.id
+--------------
+
+lastname	description	quantity
+Griffens	Elbow pads	19
+Flintstone	Elbow pads	2
+Flintstone	Knee Pads	2
+Simpson	Socks	14
+Simpson	Elbow pads	10
+Simpson	Helmet	20
+Bob	Socks	5
+Bob	Elbow pads	5
+Bob	Knee Pads	5
+Bob	Helmet	5
+--------------
+SELECT SUM(quantity) AS 'Homer\'s Total Purchases' FROM purchased INNER JOIN customer ON purchased.customerid=customer.id WHERE customer.firstname='Homer'
+--------------
+
+Homer's Total Purchases
+44
+--------------
+SELECT firstname,lastname,SUM(quantity) FROM customer INNER JOIN purchased ON customer.id=purchased.customerid GROUP BY firstname
+--------------
+
+firstname	lastname	SUM(quantity)
+Fred	Flintstone	4
+Homer	Simpson	44
+Peter	Griffens	19
+Sideshow	Bob	20
+--------------
+SELECT description,inventory FROM product WHERE NOT EXISTS(SELECT * FROM purchased WHERE purchased.productid=product.id)
+--------------
+
+description	inventory
+Bike	200
+Hockey stick	100
+Roller Blades	89
+--------------
+SELECT description,inventory FROM product WHERE id NOT IN(SELECT productid FROM purchased INNER JOIN customer ON purchased.customerid=customer.id WHERE customer.firstname='Fred' AND customer.lastname='Flintstone')
+--------------
+
+description	inventory
+Bike	200
+Socks	100
+Hockey stick	100
+Roller Blades	89
+Helmet	30
+--------------
+SELECT customer.firstname,customer.lastname,agent.firstname,agent.lastname FROM customer INNER JOIN agent WHERE customer.cityname=agent.cityname
+--------------
+
+firstname	lastname	firstname	lastname
+Barney	Rubble	Regis	Philbin
+Fred	Flintstone	Regis	Philbin
+Monty	Burns	Hugh	Grant
+Homer	Simpson	Hugh	Grant
+Sideshow	Bob	Hugh	Grant
+--------------
+SELECT SUM(quantity) AS 'Number of Knee Pads Purchased' FROM purchased INNER JOIN customer ON customer.id=purchased.customerid WHERE productid=78
+--------------
+
+Number of Knee Pads Purchased
+7
+--------------
+SELECT description FROM product WHERE id IN(SELECT productid FROM (SELECT productid, count(*) as c from purchased GROUP BY productid HAVING c>=3) AS x)
+--------------
+
+description
+Elbow pads
+--------------
+SELECT agent.firstname, agent.lastname FROM purchased INNER JOIN customer ON customer.id=purchased.customerid INNER JOIN agent on customer.agentid=agent.id WHERE purchased.productid=78
+--------------
+
+firstname	lastname
+Regis	Philbin
+Rosie	ODonnell
