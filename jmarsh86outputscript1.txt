@@ -1,0 +1,68 @@
+Warning: Using a password on the command line interface can be insecure.
+--------------
+SHOW DATABASES
+--------------
+
+Database
+information_schema
+flipped3
+jmarsh86assign2db
+mysql
+performance_schema
+--------------
+DROP DATABASE IF EXISTS jmarsh86assign2db
+--------------
+
+--------------
+CREATE DATABASE jmarsh86assign2db
+--------------
+
+--------------
+GRANT USAGE ON *.* TO 'ta'@'localhost'
+--------------
+
+--------------
+DROP USER 'ta'@'localhost'
+--------------
+
+--------------
+CREATE USER 'ta'@'localhost' IDENTIFIED BY 'cs3319'
+--------------
+
+--------------
+GRANT ALL PRIVILEGES ON jmarsh86assign2db.* TO 'ta'@'localhost'
+--------------
+
+--------------
+FLUSH PRIVILEGES
+--------------
+
+--------------
+SHOW TABLES
+--------------
+
+--------------
+CREATE TABLE product (id CHAR(2) NOT NULL, description CHAR(20) NOT NULL, cost FLOAT NOT NULL, inventory INT NOT NULL, PRIMARY KEY (id))
+--------------
+
+--------------
+CREATE TABLE agent (id CHAR(2) NOT NULL, firstname CHAR(30) NOT NULL, lastname CHAR(30) NOT NULL, cityname CHAR(15) NOT NULL, commission FLOAT NOT NULL, PRIMARY KEY (id))
+--------------
+
+--------------
+CREATE TABLE customer (id CHAR(2) NOT NULL, firstname CHAR(30) NOT NULL, lastname CHAR(30) NOT NULL, cityname CHAR(15) NOT NULL, phonenumber VARCHAR(12) NOT NULL, agentid CHAR(2) NOT NULL, FOREIGN KEY(agentid) REFERENCES agent(id), PRIMARY KEY (id))
+--------------
+
+--------------
+CREATE TABLE purchased (customerid CHAR(2) NOT NULL, productid CHAR(2) NOT NULL, quantity INT NOT NULL, FOREIGN KEY(customerid) REFERENCES customer(id), FOREIGN KEY(productid) REFERENCES product(id), PRIMARY KEY (customerid,productid))
+--------------
+
+--------------
+SHOW TABLES
+--------------
+
+Tables_in_jmarsh86assign2db
+agent
+customer
+product
+purchased
